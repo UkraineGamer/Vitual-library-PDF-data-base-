@@ -2,6 +2,7 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from gridfs import GridFS
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 
 class Books_open:
@@ -21,7 +22,8 @@ class Books_open:
         self.fs = GridFS(self.client[self.mongo_db])
 
     def upload_file_gfs(self, file_path):
-        with file_path.open("rb") as f:
+        
+        with Path(file_path).open("rb") as f:
                 file_id = self.fs.put(f, filename=file_path.name)
         
         file_saved = {
@@ -32,4 +34,4 @@ class Books_open:
         return result.inserted_id
 
 open_books = Books_open()
-open_books.upload_file_gfs("testing.pdf")
+open_books.upload_file_gfs("C:\\Users\\andre\\OneDrive\\Documents\\GitHub\\Vitual-library-PDF-data-base\\testing.pdf")
