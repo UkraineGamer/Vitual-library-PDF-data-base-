@@ -2,7 +2,6 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from gridfs import GridFS
 from dotenv import load_dotenv
-from pathlib import Path
 import os
 
 class Books_open:
@@ -19,5 +18,18 @@ class Books_open:
 
         self.mongo_db = os.getenv("MONGO_DB_NAME")
         self.mongo_collection = os.getenv("MONGO_COLLECTION_NAME")
+        self.fs = GridFS(self.client[self.mongo_db])
 
-    def 
+    def upload_file_gfs(self, file_path):
+        with file_path.open("rb") as f:
+                file_id = self.fs.put(f, filename=file_path.name)
+        
+        file_saved = {
+            "file_id": file_id,
+            "filename": file_path.name,
+            }
+        result = self.mongo_collection.insert_one(file_saved)
+        return result.inserted_id
+
+open_books = Books_open()
+open_books.upload_file_gfs("testing.pdf")
