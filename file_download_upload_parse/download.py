@@ -1,6 +1,8 @@
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from gridfs import GridFS
+from gridfs.errors import NoFile
+from bson import ObjectId
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -40,12 +42,32 @@ class Books_download:
         """Remove Atlas UI's optional <password> placeholder brackets."""
         return re.sub(r":<([^>]*)>@", r":\1@", uri)
 
-    def download_file_gfs(self, file_id: str | bytes, output_path: str | Path):
+    def download_file_gfs(self, file_id: str | ObjectId, output_path: str | Path):
+        if isinstance(file_id, str):
+            if not ObjectId.is_valid(file_id):
+                raise ValueError(
+                    "file_id must be a 24-character hexadecimal MongoDB ObjectId."
+                )
+            file_id = ObjectId(file_id)
+
         output_folder = Path(output_path)
         output_folder.mkdir(parents=True, exist_ok=True)
 
-        file_data = self.fs.get(file_id)
+        try:
+            file_data = self.fs.get(file_id)
+        except NoFile as exc:
+            raise FileNotFoundError(
+                f"No GridFS file exists with ID: {file_id}"
+            ) from exc
         output_file_path = output_folder / file_data.filename
 
         with output_file_path.open("wb") as f:
             f.write(file_data.read())
+
+        print(f"File '{file_data.filename}' downloaded from GridFS to: {output_file_path}")
+
+if __name__ == "__main__":
+    open_books = Books_download()
+    # Replace 'your_file_id_here' with the actual file ID you want to download
+    file_id_to_download = '6a9422cbedceb9192d302b4a'
+    open_books.download_file_gfs(file_id_to_download, Path(__file__).resolve().parents[1] / "downloads")
