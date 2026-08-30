@@ -6,7 +6,7 @@ from pathlib import Path
 import os
 import re
 
-class Books_upload:
+class Books_download:
     def __init__(self):
         load_dotenv()
         self.mongo_uri = self._normalise_mongo_uri(
@@ -40,19 +40,12 @@ class Books_upload:
         """Remove Atlas UI's optional <password> placeholder brackets."""
         return re.sub(r":<([^>]*)>@", r":\1@", uri)
 
-    def upload_file_gfs(self, file_path: str | Path):
-        file_path = Path(file_path)
+    def download_file_gfs(self, file_id: str | bytes, output_path: str | Path):
+        output_folder = Path(output_path)
+        output_folder.mkdir(parents=True, exist_ok=True)
 
-        with file_path.open("rb") as f:
-            file_id = self.fs.put(f, filename=file_path.name)
-        
-        file_saved = {
-            "file_id": file_id,
-            "filename": file_path.name,
-            }
-        result = self.mongo_collection.insert_one(file_saved)
-        return result.inserted_id
+        file_data = self.fs.get(file_id)
+        output_file_path = output_folder / file_data.filename
 
-# if __name__ == "__main__":
-#     open_books = Books_upload()
-#     open_books.upload_file_gfs(Path(__file__).resolve().parents[1] / "testing.pdf")
+        with output_file_path.open("wb") as f:
+            f.write(file_data.read())
