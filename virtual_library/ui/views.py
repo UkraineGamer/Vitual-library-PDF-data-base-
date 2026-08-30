@@ -41,7 +41,7 @@ class AppViewsMixin:
         return 10 + 27 + 8 + 6 + 10
 
     def _draw_search_bar(self, x: float, y: float, left_w: float) -> None:
-        search_w = min(620, max(420, left_w - 10))
+        search_w = min(620, max(420, left_w + 100))
         search_label = self._t("search")
         search_button_w = 36 + self.fonts["button"].measure(search_label) + 14
         search_h = 44
