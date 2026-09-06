@@ -780,7 +780,7 @@ class AppViewsMixin:
             )
 
     def _draw_details(self, x: float, y: float, w: float, h: float) -> None:
-        self._round_rect(x, y, x + w, y + h, 8, fill=COLORS["panel"], outline=COLORS["line_soft"])
+        self._round_rect(x, y - 70, x + w, y + h, 8, fill=COLORS["panel"], outline=COLORS["line_soft"])
         book = self._book_by_id(self.selected_book_id)
 
         cover_x = x + 20
