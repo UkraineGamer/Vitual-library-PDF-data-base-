@@ -784,12 +784,12 @@ class AppViewsMixin:
         book = self._book_by_id(self.selected_book_id)
 
         cover_x = x + 20
-        cover_y = y + 24
-        self._draw_cover(cover_x, cover_y, 120, 180, book, small=False)
+        cover_y = y - 17
+        self._draw_cover(cover_x, cover_y, 140, 200, book, small=False)
 
-        info_x = cover_x + 140
+        info_x = cover_x
         info_max_w = max(80, x + w - 20 - info_x)
-        self._text_fit(info_x, cover_y + 6, book["title"], COLORS["text"], "detail_title", "w", info_max_w)
+        self._text_fit(info_x, cover_y - 25, book["title"], COLORS["text"], "detail_title", "w", info_max_w)
         detail_lines = [
             book["author"],
             book["meta"],
@@ -799,15 +799,16 @@ class AppViewsMixin:
             f"Сторінок: {book['pages']}",
             f"ISBN: {book['isbn']}",
         ]
-        detail_y = cover_y + 48
-        detail_gap = 16
+        detail_y = cover_y + 10
+        detail_x = info_x + 150
+        detail_gap = 20
         for i, line in enumerate(detail_lines):
-            self._text_fit(info_x, detail_y + i * detail_gap, line, COLORS["text_soft"], "body_small", "w", info_max_w)
+            self._text_fit(detail_x, detail_y + i * detail_gap, line, COLORS["text_soft"], "body_detail", "w", info_max_w)
 
-        self._text(info_x, cover_y + 150, "★★★★★", COLORS["yellow"], "body")
+        self._text(detail_x, detail_y + 125, "★★★★★", COLORS["yellow"], "body")
         self._text_fit(
-            info_x,
-            cover_y + 186,
+            detail_x,
+            detail_y + 154,
             f"{book['rating']} ({book['reviews']} оцінок)",
             COLORS["text_soft"],
             "body_small",

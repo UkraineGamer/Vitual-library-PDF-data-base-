@@ -98,6 +98,7 @@ class BookDownloaderApp(AppViewsMixin, UiComponentsMixin):
             "nav": tkfont.Font(family="Segoe UI", size=10),
             "body": tkfont.Font(family="Segoe UI", size=13),
             "body_small": tkfont.Font(family="Segoe UI", size=10),
+            "body_detail": tkfont.Font(family="Segoe UI", size=11),
             "caption": tkfont.Font(family="Segoe UI", size=8),
             "section": tkfont.Font(family="Segoe UI Semibold", size=11),
             "title": tkfont.Font(family="Segoe UI Semibold", size=13),
